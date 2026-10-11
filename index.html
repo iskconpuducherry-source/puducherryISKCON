@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ISKCON Puducherry</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Dancing+Script:wght@700&family=Cinzel:wght@500;600&family=Great+Vibes&family=Lora&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  /* ================= LOTUS INTRO ================= */
+  :root { --bg:#7b9a76; --bg2:#6a8a66; box-sizing:border-box; --vh:1vh;
+          --S:min(88vw, calc(var(--vh) * 62), 520px); }  /* --S = size of each lotus corner */
+  html, body { margin:0; }
+  #intro {
+    background:
+      radial-gradient(ellipse at 40% 40%, rgba(255,255,255,.10), transparent 60%),
+      radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(30,50,30,.28)),
+      var(--bg);
+    overflow:hidden; position:fixed; inset:0; z-index:3000; width:100%; height:100%; cursor:pointer;
+    transition:opacity 1.2s ease;
+  }
+  #intro.hide{opacity:0;pointer-events:none}
+  .tex { position:absolute; inset:0; pointer-events:none; mix-blend-mode:multiply; opacity:.55; }
+  .corner { position:absolute; width:var(--S); height:auto; overflow:visible; }
+  .tl { top:0; left:0; transform-origin:0 0; animation:swayTL 7s ease-in-out 6s infinite alternate; }
+  .br { bottom:0; right:0; transform-origin:100% 100%; animation:swayBR 7s ease-in-out 6s infinite alternate; }
+  @keyframes swayTL { from{transform:rotate(-1.2deg)} to{transform:rotate(1.4deg)} }
+  @keyframes swayBR { from{transform:rotate(1.2deg)} to{transform:rotate(-1.4deg)} }
+
+  .stem { fill:none; stroke:#4f7d3f; stroke-width:4.5; stroke-linecap:round;
+          stroke-dasharray:1; stroke-dashoffset:1; }
+  .stem.hi { stroke:#8fbf74; stroke-width:1.4; opacity:.7; }
+  .play .stem { animation:grow 3s cubic-bezier(.45,.1,.3,1) var(--sd) forwards; }
+  @keyframes grow { to { stroke-dashoffset:0; } }
+
+  .lotus { opacity:0; transition:opacity .6s ease var(--bd); }
+  .play .lotus { opacity:1; }
+  .petal {
+    transform: rotate(calc(var(--a) * .12)) scale(.45);
+    transition: transform 2.6s cubic-bezier(.2,.85,.25,1) calc(var(--bd) + var(--pd));
+  }
+  .play .petal { transform: rotate(var(--a)) scale(1); }
+  .core { transform:scale(0); transition:transform 1s ease calc(var(--bd) + 1.6s); }
+  .play .core { transform:scale(1); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tl, .br { animation:none; }
+  }
+
+  /* ================= HOME PAGE ================= */
+  :root{--peacock:#0b5d6b;--deep:#073b45;--saffron:#f2a31b;--ivory:#fff8e7;--ink:#2b2118}
+  body{background:var(--ivory);color:var(--ink);font-family:'Lora',serif;padding-bottom:70px}
+  body.intro-on, body.detail-on{overflow:hidden}
+  #home{opacity:0;transition:opacity 1.4s ease}
+  #home.show{opacity:1}
+  h1,h2,h3,.navbar-brand{font-family:'Marcellus',serif}
+  .topbar{background:var(--deep);border-bottom:3px solid var(--saffron)}
+  .navbar-brand{color:var(--saffron)!important;letter-spacing:.5px}
+  .nav-btn{color:#fff;background:transparent;border:0;padding:.5rem .9rem}
+  .nav-btn:hover,.nav-btn:focus-visible{color:var(--saffron)}
+
+  .carousel-item{position:relative;overflow:hidden;background:var(--deep)}
+  .carousel-item::before{content:"";position:absolute;inset:-20px;
+    background:var(--bg) center/cover no-repeat;filter:blur(22px) brightness(.6)}
+  .slide-img{position:relative;z-index:1;width:100%;height:auto;max-height:80vh;object-fit:contain;background:transparent}
+
+  .history{max-width:760px;margin:auto}
+  .history h2{color:var(--peacock)}
+  .botbar{background:var(--deep);border-top:3px solid var(--saffron)}
+
+  .exit-btn{position:fixed;right:0;top:45%;z-index:1030;background:var(--saffron);color:var(--deep);
+    border:0;padding:.9rem .5rem;writing-mode:vertical-rl;font-family:'Marcellus',serif;border-radius:10px 0 0 10px}
+
+  /* ================= DETAIL PAGES ================= */
+  #detail{position:fixed;inset:0;z-index:1500;background:var(--ivory);overflow:auto;display:none}
+  #detail.show{display:block;animation:pageIn .5s ease}
+  @keyframes pageIn{from{opacity:0}to{opacity:1}}
+  .detail-body{max-width:760px;margin:auto}
+  .detail-body h2{color:var(--peacock)}
+  .back-btn{background:var(--peacock);color:#fff;border:0;border-radius:999px;padding:.7rem 1.6rem;
+    font-family:'Marcellus',serif;font-size:1.05rem;box-shadow:0 3px 10px rgba(0,0,0,.2)}
+  .back-btn:hover{background:var(--deep)}
+
+  /* ---------- Head of ISKCON page: floral background + elegant lettering ---------- */
+  #detail.head-page{
+    /* put your floral picture at images/head.jpg ; the gradient is a soft fallback of the same colours */
+    background:
+      url("images/head.jpg") center center / cover no-repeat,
+      url("head.jpg") center center / cover no-repeat,
+      radial-gradient(ellipse at 50% 45%, #fbf3ec 0%, #f0d9d4 60%, #e2b9bc 100%);
+  }
+  #detail.head-page .topbar{background:rgba(122,32,72,.92);border-bottom:3px solid #e9b8c8}
+  #detail.head-page .navbar-brand{color:#fff2f6!important}
+  #detail.head-page .detail-body{max-width:520px;padding-left:2.2rem;padding-right:2.2rem;text-align:center}
+  #detail.head-page #dTitle{
+    font-family:'Cinzel','Cormorant Garamond',serif;font-weight:600;
+    font-size:clamp(1.7rem,7vw,2.3rem);letter-spacing:.14em;text-transform:uppercase;
+    color:#8a1f55;line-height:1.3;
+    text-shadow:0 1px 0 rgba(255,255,255,.7);margin-bottom:.4rem!important}
+  #detail.head-page .back-btn{background:#9c2a63;font-family:'Cormorant Garamond',serif;
+    font-weight:600;letter-spacing:.06em;font-size:1.2rem}
+  #detail.head-page .back-btn:hover{background:#7a1f4d}
+
+  /* ---------- History button on the home page (plain button, no picture) ---------- */
+  .hist-box{display:inline-flex;align-items:center;justify-content:center;margin:0 auto;
+    padding:.95rem 2.2rem;max-width:92vw;cursor:pointer;border-radius:999px;
+    border:2px solid var(--saffron);background:linear-gradient(180deg,#0f6f7e,#073b45);
+    box-shadow:0 6px 16px rgba(7,59,69,.35);
+    animation:histFloat 3.8s ease-in-out infinite;transition:transform .3s ease}
+  .hist-box span{font-family:'Cinzel','Cormorant Garamond',serif;font-weight:600;
+    font-size:clamp(.95rem,4vw,1.25rem);letter-spacing:.1em;line-height:1.3;text-transform:uppercase;
+    color:#ffe9a8}
+  .hist-box:hover,.hist-box:focus-visible{transform:scale(1.04);animation-play-state:paused;
+    box-shadow:0 10px 22px rgba(242,163,27,.5)}
+  @keyframes histFloat{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-5px)}
+  }
+  @media (prefers-reduced-motion:reduce){.hist-box{animation:none}}
+
+  /* ---------- History page: purple + gold background (historyy.jpg) ---------- */
+  #detail.history-page{background:url("historyy.jpg") center center/cover no-repeat,url("historyy.jpg") center center/cover no-repeat,#3a1a47}
+  #detail.history-page .topbar{background:rgba(38,12,48,.92);border-bottom:3px solid #d4a64a}
+  #detail.history-page .navbar-brand{color:#f0cf7a!important}
+  #detail.history-page .detail-body{max-width:560px;padding:3rem 2.6rem;text-align:center}
+  #detail.history-page #dTitle{font-family:'Cinzel','Cormorant Garamond',serif;font-weight:600;
+    font-size:clamp(1.5rem,6vw,2.1rem);letter-spacing:.12em;text-transform:uppercase;line-height:1.35;
+    color:#f0cf7a;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+  #detail.history-page .hist-text p{font-family:'Cormorant Garamond',serif;font-weight:600;
+    font-size:clamp(1.2rem,4.6vw,1.45rem);line-height:1.75;color:#f7ecd4;margin-bottom:1.4rem}
+  #detail.history-page .orn{color:#e2b958}
+  #detail.history-page .orn::before,#detail.history-page .orn::after{
+    background:linear-gradient(90deg,transparent,#e2b958,transparent)}
+  #detail.history-page .back-btn{background:linear-gradient(180deg,#e8c56a,#a97a22);color:#3a1450;
+    font-family:'Cormorant Garamond',serif;font-weight:700;letter-spacing:.06em;font-size:1.2rem}
+  #detail.history-page .back-btn:hover{background:linear-gradient(180deg,#f0d27e,#b98a2e)}
+
+  /* ---------- Location & Address page: peacock feather picture (address.jpg) ---------- */
+  #detail.loc-page{background:#fff6cf}
+  #detail.loc-page .topbar{background:#1f5a4d;border-bottom:3px solid #d9a13b}
+  #detail.loc-page .navbar-brand{color:#f6dc9a!important}
+  #detail.loc-page .detail-body{max-width:560px;padding:1.6rem 1rem 1rem;text-align:center}
+  #detail.loc-page #dTitle{font-family:'Cinzel','Cormorant Garamond',serif;font-weight:600;
+    font-size:clamp(1.4rem,6vw,2rem);letter-spacing:.14em;text-transform:uppercase;line-height:1.3;
+    color:#1f5a4d;margin-bottom:1rem!important}
+  #detail.loc-page .back-btn{background:#1f5a4d;font-family:'Cormorant Garamond',serif;
+    font-weight:700;letter-spacing:.06em;font-size:1.2rem}
+  #detail.loc-page .back-btn:hover{background:#143e35}
+  /* the picture keeps its shape; the text sits inside the paper card of the picture */
+  /* address.jpg has a light-blue strip at its top (18%) and bottom (16.5%): only the middle part is shown */
+  .feather-card{position:relative;width:min(96vw,540px);margin:0 auto;aspect-ratio:630/722;
+    background:url("images/address.jpg") 0 52.17%/100% 152.67% no-repeat,url("address.jpg") 0 52.17%/100% 152.67% no-repeat;container-type:inline-size}
+  .feather-card .inner{position:absolute;left:15.5%;width:51%;top:11.5%;height:69%;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+  .loc-name{font-family:'Cinzel','Cormorant Garamond',serif;font-weight:600;letter-spacing:.08em;
+    font-size:4.2cqw;line-height:1.3;color:#1f5a4d;margin-bottom:3.5cqw}
+  .loc-addr{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:4cqw;line-height:1.5;
+    color:#4a2a12;margin-bottom:3.5cqw}
+  .loc-mark{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:3.8cqw;line-height:1.35;color:#7a3a14}
+  .loc-mark span{display:block;font-weight:600;letter-spacing:.28em;text-transform:uppercase;
+    font-size:.8em;color:#2f7a68;margin-bottom:.2em}
+  .map-wrap{margin:1.4rem auto 1rem;max-width:520px;border-radius:14px;overflow:hidden;
+    border:2px solid #d9a13b;box-shadow:0 6px 18px rgba(60,40,10,.25);background:#fff}
+  .map-wrap iframe{display:block;width:100%;height:300px;border:0}
+  .map-btn{display:inline-block;margin-top:.2rem;padding:.6rem 1.5rem;border-radius:999px;text-decoration:none;
+    color:#fff;background:linear-gradient(180deg,#2f7a68,#1f5a4d);font-family:'Cormorant Garamond',serif;
+    font-weight:700;letter-spacing:.06em;font-size:1.1rem;box-shadow:0 3px 10px rgba(30,60,50,.3)}
+  .map-btn:hover{color:#fff;filter:brightness(1.1)}
+
+  #bkSlider .carousel-item.active{animation:bkFade .7s ease}
+  @keyframes bkFade{from{opacity:0}to{opacity:1}}
+
+  /* ---------- Darshan Timing page: yellow floral picture (darshan.jpg) ---------- */
+  #detail.darshan-page{
+    background:url("darshan.jpg") center center / cover no-repeat,
+      url("darshan.jpg") center center / cover no-repeat,#f2c14e}
+  #detail.darshan-page .topbar{background:#6b2230;border-bottom:3px solid #e8b13a}
+  #detail.darshan-page .navbar-brand{color:#ffe9a8!important}
+  #detail.darshan-page .detail-body{max-width:460px;padding:2.4rem 3.2rem 1rem;text-align:center}
+  #detail.darshan-page #dTitle{font-family:'Cinzel','Cormorant Garamond',serif;font-weight:600;
+    font-size:clamp(1.5rem,6.5vw,2.1rem);letter-spacing:.14em;text-transform:uppercase;line-height:1.3;
+    color:#6b2230;text-shadow:0 1px 0 rgba(255,255,255,.4)}
+  #detail.darshan-page .orn{color:#8a3a2a}
+  #detail.darshan-page .orn::before,#detail.darshan-page .orn::after{
+    background:linear-gradient(90deg,transparent,#8a3a2a,transparent)}
+  #detail.darshan-page .back-btn{background:#6b2230;font-family:'Cormorant Garamond',serif;
+    font-weight:700;letter-spacing:.06em;font-size:1.2rem}
+  #detail.darshan-page .back-btn:hover{background:#4a1520}
+  .dar-lead{font-family:'Cormorant Garamond',serif;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
+    font-size:1rem;color:#8a3a2a;margin-bottom:1.4rem}
+  .dar-row{margin-bottom:1.5rem}
+  .dar-row small{display:block;font-family:'Cormorant Garamond',serif;font-weight:700;letter-spacing:.28em;
+    text-transform:uppercase;font-size:.95rem;margin-bottom:.15rem}
+  .dar-row b{display:block;font-family:'Cinzel','Cormorant Garamond',serif;font-weight:600;letter-spacing:.05em;
+    font-size:clamp(1.15rem,5vw,1.5rem);line-height:1.35;color:#4a1520}
+  .dar-open small{color:#2f6b2f}
+  .dar-closed small{color:#a3281f}
+
+  /* ---------- Programme page: pink floral theme (head.jpg) + four pictures (first.jpg, second.jpg, third.jpg, fourth.jpg) ---------- */
+  #detail.prog-page{
+    background:url("head.jpg") center center / cover fixed no-repeat,
+      url("head.jpg") center center / cover fixed no-repeat,
+      radial-gradient(ellipse at 50% 45%, #fbf3ec 0%, #f0d9d4 60%, #e2b9bc 100%)}
+  #detail.prog-page .topbar{background:rgba(122,32,72,.92);border-bottom:3px solid #e9b8c8}
+  #detail.prog-page .navbar-brand{color:#fff2f6!important}
+  #detail.prog-page .detail-body{max-width:560px;padding-left:1.6rem;padding-right:3.5rem;text-align:center}
+  #detail.prog-page #dTitle{font-family:'Cinzel','Cormorant Garamond',serif;font-weight:600;
+    font-size:clamp(1.6rem,7vw,2.3rem);letter-spacing:.16em;text-transform:uppercase;color:#8a1f55;
+    text-shadow:0 1px 0 rgba(255,255,255,.7)}
+  #detail.prog-page .back-wrap{display:block}   /* this page also has a Back to Home button at the end */
+  #detail.prog-page .back-btn{background:#9c2a63;font-family:'Cormorant Garamond',serif;
+    font-weight:700;letter-spacing:.06em;font-size:1.2rem}
+  #detail.prog-page .back-btn:hover{background:#7a1f4d}
+  .fest{margin:0 auto .85rem;padding:.8rem 1rem;background:rgba(255,248,244,.92);border:1px solid #efc3d3;
+    border-left:4px solid #c2527f;border-radius:12px;box-shadow:0 3px 10px rgba(122,31,77,.14);text-align:left}
+  .fest b{display:block;font-family:'Cinzel','Cormorant Garamond',serif;font-weight:600;letter-spacing:.04em;
+    font-size:clamp(1.05rem,4.4vw,1.25rem);color:#8a1f55}
+  .fest span{display:block;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.1rem;color:#4a1230;line-height:1.35}
+  .prog-pic{margin:1.4rem auto 1.5rem;padding:.5rem;background:rgba(255,248,244,.95);border:2px solid #e9b8c8;
+    border-radius:16px;box-shadow:0 6px 18px rgba(122,31,77,.25)}
+  .prog-pic img{display:block;width:100%;height:auto;max-height:420px;object-fit:contain;border-radius:10px}
+  /* note at the end of the Programme page */
+  .prog-members{margin:1.6rem auto 1rem;padding:1.1rem 1.2rem;text-align:center;border-radius:14px;
+    background:linear-gradient(180deg,#fff3f7,#fbdce8);border:2px solid #c2527f;
+    box-shadow:0 4px 14px rgba(122,31,77,.22);
+    font-family:'Cormorant Garamond',serif;font-weight:700;font-size:clamp(1.2rem,4.8vw,1.45rem);
+    line-height:1.5;color:#6b1f45}
+  .prog-members b{color:#9c2a63;font-size:1.15em}
+
+  /* highlighted note on the Books page */
+  .book-note{margin:1.2rem 0 .4rem;padding:1rem 1.2rem;text-align:center;border-radius:12px;
+    background:linear-gradient(180deg,#fff3c9,#ffe39a);border:2px solid var(--saffron);
+    font-family:'Marcellus',serif;font-size:1.15rem;color:var(--deep);letter-spacing:.03em;
+    box-shadow:0 3px 10px rgba(0,0,0,.1)}
+
+  /* Available Books list */
+  .books-by{text-align:center;font-family:'Marcellus',serif;color:var(--peacock);letter-spacing:.08em;margin-bottom:1.2rem}
+  .book-list{list-style:none;counter-reset:bk;padding:0;margin:0}
+  .book-list li{counter-increment:bk;display:flex;align-items:center;gap:.9rem;padding:.8rem 1rem;margin-bottom:.7rem;
+    background:#fff;border:1px solid #e9d9a8;border-left:4px solid var(--saffron);border-radius:10px;
+    font-family:'Lora',serif;font-size:1.05rem;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .book-list li::before{content:counter(bk);flex:0 0 auto;width:2rem;height:2rem;border-radius:50%;
+    background:var(--peacock);color:#fff;display:flex;align-items:center;justify-content:center;
+    font-family:'Marcellus',serif}
+
+  /* ---------- Contact page: green background with a blooming lotus (same lotus as the opening) ---------- */
+  #detail.contact-page{
+    background:
+      radial-gradient(ellipse at 40% 40%, rgba(255,255,255,.10), transparent 60%),
+      radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(30,50,30,.28)),
+      #7b9a76}
+  #detail.contact-page .topbar{background:#2f4f2d;border-bottom:3px solid #f2a31b;position:relative;z-index:3}
+  #detail.contact-page .navbar-brand{color:#ffe9a8!important}
+  #detail.contact-page .detail-body{position:relative;z-index:2;max-width:520px;padding-left:1.4rem;padding-right:1.4rem;text-align:center}
+  #detail.contact-page #dTitle{font-family:'Cinzel','Cormorant Garamond',serif;font-weight:600;
+    font-size:clamp(1.6rem,7vw,2.2rem);letter-spacing:.16em;text-transform:uppercase;color:#fff8e7;
+    text-shadow:0 2px 4px rgba(20,40,20,.45)}
+  #detail.contact-page .orn{color:#ffe9a8}
+  #detail.contact-page .orn::before,#detail.contact-page .orn::after{
+    background:linear-gradient(90deg,transparent,#ffe9a8,transparent)}
+  #detail.contact-page .back-btn{background:#fff8e7;color:#2f4f2d;font-family:'Cormorant Garamond',serif;
+    font-weight:700;letter-spacing:.06em;font-size:1.2rem}
+  #detail.contact-page .back-btn:hover{background:#ffe9a8}
+  .phone-card{display:block;text-decoration:none;margin:0 auto 1rem;padding:.9rem 1rem;max-width:380px;
+    background:rgba(255,248,231,.94);border:1px solid #e4cf94;border-radius:14px;
+    box-shadow:0 4px 14px rgba(30,50,30,.28);transition:transform .25s ease,box-shadow .25s ease}
+  .phone-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(30,50,30,.35)}
+  .phone-card small{display:block;font-family:'Cormorant Garamond',serif;font-weight:700;letter-spacing:.3em;
+    text-transform:uppercase;font-size:.85rem;color:#b0396f}
+  .phone-card b{display:block;font-family:'Cinzel','Cormorant Garamond',serif;font-weight:600;letter-spacing:.08em;
+    font-size:clamp(1.25rem,5.5vw,1.6rem);color:#2f4f2d}
+  /* lotus corners inside the Contact page (hidden on every other page) */
+  .contact-lotus{display:none;position:fixed;z-index:1;width:min(58vw,320px);height:auto;overflow:visible;pointer-events:none}
+  #detail.contact-page .contact-lotus{display:block}
+  .c-tl{top:58px;left:0;width:min(36vw,200px);transform-origin:0 0;animation:swayTL 7s ease-in-out 6s infinite alternate}
+  .c-br{bottom:0;right:0;transform-origin:100% 100%;animation:swayBR 7s ease-in-out 6s infinite alternate}
+  @media (prefers-reduced-motion:reduce){.c-tl,.c-br{animation:none}}
+
+  /* side "Go to Home Page" button (Head of ISKCON page only) */
+  .side-home{display:block;position:fixed;right:0;top:42%;z-index:1600;border:0;
+    writing-mode:vertical-rl;padding:1.1rem .65rem;
+    font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.15rem;letter-spacing:.14em;
+    color:#fff;background:linear-gradient(180deg,#d9689a,#9c2a63);
+    border-radius:16px 0 0 16px;border:1px solid rgba(255,255,255,.55);border-right:0;
+    box-shadow:-3px 4px 14px rgba(122,31,77,.35),inset 0 0 0 1px rgba(255,220,235,.35);
+    text-shadow:0 1px 1px rgba(80,10,45,.35);cursor:pointer;transition:padding .25s ease,filter .25s ease}
+  .side-home:hover,.side-home:focus-visible{padding-right:1rem;filter:brightness(1.08)}
+  /* the side button takes each page's own colours (Head page keeps the pink one above) */
+  #detail .back-wrap{display:none}   /* one home button per page: the side one */
+  #detail:not(.head-page):not(.history-page):not(.contact-page):not(.loc-page):not(.darshan-page):not(.prog-page) .side-home{
+    background:linear-gradient(180deg,#1b8a9c,#073b45);box-shadow:-3px 4px 14px rgba(7,59,69,.4),inset 0 0 0 1px rgba(255,233,168,.35)}
+  #detail.history-page .side-home{background:linear-gradient(180deg,#e8c56a,#a97a22);color:#3a1450;text-shadow:none}
+  #detail.contact-page .side-home,#detail.loc-page .side-home{background:linear-gradient(180deg,#3f8a74,#1f5a4d)}
+  #detail.darshan-page .side-home{background:linear-gradient(180deg,#a8404f,#6b2230)}
+  @media (max-width:576px){#detail .detail-body{padding-right:3.5rem!important}}
+
+  .orn{color:#c2527f;font-size:1.3rem;letter-spacing:.7em;margin:.2rem 0 1.6rem;
+    display:flex;align-items:center;justify-content:center;gap:.8rem}
+  .orn::before,.orn::after{content:"";height:1px;width:68px;
+    background:linear-gradient(90deg,transparent,#c2527f,transparent)}
+  .role-card{margin-bottom:2.1rem}
+  .role{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.05rem;
+    letter-spacing:.32em;text-transform:uppercase;color:#b0396f;margin-bottom:.3rem}
+  .nm{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:clamp(1.55rem,6vw,2rem);
+    color:#4a1230;line-height:1.25}
+  .nm small{display:block;font-style:normal;font-weight:700;font-size:.9em;color:#4a1230;letter-spacing:.03em}
+
+  .role-card + .role-card{position:relative;padding-top:1.7rem}
+  .role-card + .role-card::before{content:"\274B";position:absolute;top:-.35rem;left:50%;
+    transform:translateX(-50%);color:#d98aa9;font-size:.9rem}
+
+  /* peacock feather that flies right to left on "Back to Home" */
+  .fly-feather{position:fixed;z-index:2600;bottom:35%;right:-130px;width:110px;height:149px;
+    pointer-events:none;filter:drop-shadow(0 4px 6px rgba(0,0,0,.35));
+    animation:featherAcross 1.8s ease-in-out forwards}
+  @keyframes featherAcross{
+    0%  {transform:translate(0,0) rotate(-80deg)}
+    25% {transform:translate(-30vw,-40px) rotate(-100deg)}
+    50% {transform:translate(-60vw,20px) rotate(-80deg)}
+    75% {transform:translate(-85vw,-30px) rotate(-100deg)}
+    100%{transform:translate(calc(-100vw - 260px),0) rotate(-85deg)}
+  }
+  @media (prefers-reduced-motion:reduce){.fly-feather{animation-duration:.01s}}
+
+  /* ================= EXIT ================= */
+  #bye{position:fixed;inset:0;z-index:2000;background:radial-gradient(circle,var(--peacock),var(--deep));
+    display:none;align-items:center;justify-content:center}
+  #bye.show{display:flex}
+  .writer{position:relative;font-family:'Dancing Script',cursive;font-size:clamp(2.6rem,11vw,6rem);color:var(--saffron)}
+  .writer .ink{display:block;clip-path:inset(0 100% 0 0)}
+  .writer .feather{position:absolute;left:0;bottom:6%;width:110px;height:149px;opacity:0;
+    transform-origin:50% 100%;transform:translateX(-50%) rotate(30deg);
+    filter:drop-shadow(0 4px 6px rgba(0,0,0,.35))}
+  #bye.show .ink{animation:write 3s linear forwards}
+  #bye.show .feather{animation:fly 3s linear forwards, bob2 .3s ease-in-out infinite alternate}
+  @keyframes write{to{clip-path:inset(0 0 0 0)}}
+  @keyframes fly{0%{left:0;opacity:1}97%{opacity:1}100%{left:100%;opacity:0}}
+  @keyframes bob2{from{transform:translateX(-50%) rotate(25deg)}to{transform:translateX(-50%) rotate(35deg)}}
+  @media (prefers-reduced-motion:reduce){#bye.show .ink,#bye.show .feather{animation-duration:.01s}}
+
+  @media (max-width:576px){
+    .navbar-brand{font-size:1.1rem}
+    .nav-btn{font-size:.8rem;padding:.4rem .5rem}
+    .botbar .nav-btn{font-size:.8rem;padding:.4rem .3rem}
+    .history{padding-left:1rem;padding-right:1rem}
+    .writer .feather{width:76px;height:103px}
+    .fly-feather{width:76px;height:103px;right:-90px}
+  }
+</style>
+</head>
+<body class="intro-on">
+
+<!-- ================= LOTUS INTRO (blooming only) ================= -->
+<div id="intro">
+  <svg class="tex" width="100%" height="100%" aria-hidden="true">
+    <filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".012 .02" numOctaves="4" seed="7"/>
+      <feColorMatrix values="0 0 0 0 .55  0 0 0 0 .62  0 0 0 0 .55  0 0 0 1.1 -.35"/></filter>
+    <rect width="100%" height="100%" filter="url(#n)"/>
+  </svg>
+
+  <svg class="corner tl" viewBox="0 0 300 340" id="tl" aria-hidden="true"></svg>
+  <svg class="corner br" viewBox="0 0 300 340" id="br" aria-hidden="true"></svg>
+</div>
+
+<!-- ================= HOME PAGE ================= -->
+<div id="home">
+
+  <nav class="navbar topbar sticky-top">
+    <div class="container-fluid justify-content-center justify-content-md-between">
+      <span class="navbar-brand">ISKCON Puducherry</span>
+      <div>
+        <button class="nav-btn" data-info="head">Head of ISKCON</button>
+        <button class="nav-btn" data-info="darshan">Darshan Timing</button>
+        <button class="nav-btn" data-info="books">Available Books</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Radha Krishna slider (auto, every 3 secs) -->
+  <div id="rkSlider" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3000">
+    <div class="carousel-inner">
+      <div class="carousel-item active"><img src="one.jpg" class="d-block slide-img" alt="Sri Sri Radha Krishna"></div>
+      <div class="carousel-item"><img src="two.jpg" class="d-block slide-img" alt="Sri Sri Radha Krishna"></div>
+    </div>
+  </div>
+
+  <section class="container py-5 text-center">
+    <button class="hist-box" data-info="history" aria-label="History of ISKCON Puducherry">
+      <span>History of ISKCON Puducherry</span>
+    </button>
+  </section>
+
+  <!-- Thirumanjanam slider (4 images, auto, every 3 secs) -->
+  <div id="tmSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    <div class="carousel-inner">
+      <div class="carousel-item active"><img src="three.jpg" class="d-block slide-img" alt="Thirumanjanam"></div>
+      <div class="carousel-item"><img src="four.jpg" class="d-block slide-img" alt="Thirumanjanam"></div>
+      <div class="carousel-item"><img src="five.jpg" class="d-block slide-img" alt="Thirumanjanam"></div>
+      <div class="carousel-item"><img src="six.jpg" class="d-block slide-img" alt="Thirumanjanam"></div>
+    </div>
+  </div>
+  <div class="py-4"></div>
+
+  <nav class="botbar fixed-bottom">
+    <div class="d-flex justify-content-around py-2">
+      <button class="nav-btn" data-info="programme">Programme</button>
+      <button class="nav-btn" data-info="location">Location &amp; Address</button>
+      <button class="nav-btn" data-info="contact">Contact Number</button>
+    </div>
+  </nav>
+
+  <button class="exit-btn" id="exitBtn">Exit</button>
+</div>
+
+<!-- ================= DETAIL PAGE (one template for every header) ================= -->
+<div id="detail" aria-hidden="true">
+  <svg class="contact-lotus c-tl" id="ctl" viewBox="0 0 300 340" aria-hidden="true"></svg>
+  <svg class="contact-lotus c-br" id="cbr" viewBox="0 0 300 340" aria-hidden="true"></svg>
+  <header class="topbar">
+    <div class="container py-3"><span class="navbar-brand">ISKCON Puducherry</span></div>
+  </header>
+  <main class="container py-5 detail-body">
+    <h2 id="dTitle" class="mb-4"></h2>
+    <div id="dBody"></div>
+    <div class="text-center mt-5 mb-4 back-wrap">
+      <button class="back-btn" id="backBtn">&larr; Back to Home</button>
+    </div>
+  </main>
+  <button class="side-home" id="sideHome">&#10048;&nbsp; Go to Home Page</button>
+</div>
+
+<!-- Exit: peacock feather writes Hare Krishna -->
+<div id="bye" aria-live="polite">
+  <div class="writer">
+    <span class="ink">Hare Krishna</span>
+    <svg class="feather" viewBox="0 0 200 270" aria-hidden="true">
+      <defs>
+        <linearGradient id="bodyG" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stop-color="#0d6b57"/><stop offset=".5" stop-color="#3f9a2c"/><stop offset="1" stop-color="#c3d62c"/>
+        </linearGradient>
+        <radialGradient id="ringG" cx="50%" cy="42%" r="60%">
+          <stop offset="0" stop-color="#d9a13b"/><stop offset="1" stop-color="#9a5e18"/>
+        </radialGradient>
+        <radialGradient id="tealG" cx="50%" cy="40%" r="60%">
+          <stop offset="0" stop-color="#46c4d8"/><stop offset="1" stop-color="#1d86b4"/>
+        </radialGradient>
+        <radialGradient id="blueG" cx="45%" cy="35%" r="65%">
+          <stop offset="0" stop-color="#2a45e0"/><stop offset="1" stop-color="#101a8c"/>
+        </radialGradient>
+      </defs>
+      <path id="featherBody" fill="url(#bodyG)" opacity=".95"/>
+      <g id="barbs" fill="none" stroke-linecap="round"></g>
+      <path d="M100 268 L100 36" stroke="#e6dca0" stroke-width="1.8" stroke-linecap="round"/>
+      <ellipse cx="100" cy="106" rx="40" ry="52" fill="url(#ringG)"/>
+      <g id="ringHair" stroke="#6b3d0c" stroke-width=".6" opacity=".35"></g>
+      <ellipse cx="100" cy="114" rx="25" ry="31" fill="url(#tealG)"/>
+      <ellipse cx="100" cy="115" rx="18" ry="23" fill="url(#blueG)"/>
+      <ellipse cx="108" cy="126" rx="9" ry="6" fill="#36b4d6" transform="rotate(-35 108 126)"/>
+      <ellipse cx="105" cy="122" rx="5" ry="4" fill="#1a2cb8" transform="rotate(-35 105 122)"/>
+      <ellipse cx="93" cy="104" rx="3" ry="6" fill="#8fb4ff" opacity=".35"/>
+    </svg>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ================= LOTUS SCRIPT ================= -->
+<script>
+const NS = "http://www.w3.org/2000/svg";
+const el = (n, a = {}, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
+
+const CORNERS = {
+  tl: [
+    { d:"M 12 -10 C 0 120, 60 235, 150 172", at:[150,172], rot:32,  s:1.0,  sd:0.2, col:0 },
+    { d:"M 95 -10 C 110 60, 205 95, 222 40", at:[222,40],  rot:18,  s:0.62, sd:1.0, col:1 },
+    { d:"M -10 130 C 40 150, 55 190, 80 262", at:[80,262], rot:-18, s:0.5,  sd:1.6, col:1 }
+  ],
+  br: [
+    { d:"M 238 350 C 232 280, 198 205, 172 122", at:[172,122], rot:-8,  s:1.0,  sd:0.2, col:0 },
+    { d:"M 292 350 C 272 305, 292 245, 252 192", at:[252,192], rot:16,  s:0.7,  sd:1.0, col:1 },
+    { d:"M 190 350 C 182 305, 140 285, 112 250", at:[112,250], rot:-32, s:0.5,  sd:1.6, col:1 }
+  ]
+};
+
+CORNERS.ctl = CORNERS.tl;   // same lotus shapes for the Contact page
+CORNERS.cbr = CORNERS.br;
+
+const PETAL = "M0 0 C-15 -12 -17 -44 0 -64 C17 -44 15 -12 0 0Z";
+const LAYERS = [
+  { n:7, spread:150, len:1.0,  g:"gBack", pd:0.0 },
+  { n:5, spread:104, len:0.88, g:"gMid",  pd:0.25 },
+  { n:3, spread:46,  len:0.74, g:"gFront",pd:0.5 }
+];
+
+function defs(svg, id) {
+  const d = el("defs", {}, svg);
+  const mk = (name, c1, c2, c3) => {
+    const g = el("linearGradient", { id: name + id, x1:0, y1:1, x2:0, y2:0 }, d);
+    el("stop", { offset:"0", "stop-color":c1 }, g);
+    el("stop", { offset:".55", "stop-color":c2 }, g);
+    el("stop", { offset:"1", "stop-color":c3 }, g);
+  };
+  mk("gBack",  "#e0668f", "#f2a2bd", "#fbd3df");
+  mk("gMid",   "#ea7ea2", "#f6b3c9", "#fde0e8");
+  mk("gFront", "#f08fb0", "#f9c4d4", "#fff0f3");
+  mk("gDeep",  "#b81d4f", "#d9406f", "#ee7a9f");
+}
+
+function lotus(parent, item, id) {
+  const bd = item.sd + 2.7;
+  const g = el("g", { transform:`translate(${item.at}) rotate(${item.rot}) scale(${item.s})` }, parent);
+  const wrap = el("g", { class:"lotus", style:`--bd:${bd}s` }, g);
+  const deep = item.col === 0;
+  LAYERS.forEach((L, li) => {
+    for (let i = 0; i < L.n; i++) {
+      const t = L.n === 1 ? 0 : i / (L.n - 1) - 0.5;
+      const a = t * L.spread;
+      const p = el("g", { class:"petal", style:`--a:${a}deg; --pd:${L.pd + i * 0.05}s` }, wrap);
+      const fill = (deep && li === 0) ? "gDeep" : L.g;
+      el("path", { d:PETAL, transform:`scale(${L.len})`, fill:`url(#${fill}${id})`,
+                   stroke:"rgba(255,255,255,.55)", "stroke-width":".8" }, p);
+      el("path", { d:"M0 -6 L0 -50", transform:`scale(${L.len})`, stroke:"rgba(190,60,110,.25)",
+                   "stroke-width":".7", fill:"none" }, p);
+    }
+  });
+  const core = el("g", { class:"core", style:`--bd:${bd}s` }, wrap);
+  el("ellipse", { cx:0, cy:-9, rx:7, ry:6, fill:"#f6c445" }, core);
+  for (let k = -3; k <= 3; k++) el("circle", { cx:k * 2.2, cy:-12 - Math.abs(k) * .3, r:1.2, fill:"#e39a1f" }, core);
+}
+
+function build(id) {
+  const svg = document.getElementById(id);
+  svg.innerHTML = "";
+  defs(svg, id);
+  const root = el("g", {}, svg);
+  CORNERS[id].forEach(item => {
+    const style = `--sd:${item.sd}s`;
+    el("path", { d:item.d, class:"stem", pathLength:1, style }, root);
+    el("path", { d:item.d, class:"stem hi", pathLength:1, style, transform:"translate(-1.2,-1)" }, root);
+  });
+  CORNERS[id].forEach(item => lotus(root, item, id));
+  return root;
+}
+
+function play() {
+  ["tl", "br"].forEach(id => {
+    const svg = document.getElementById(id);
+    svg.classList.remove("play");
+    build(id);
+    void svg.getBoundingClientRect();
+    svg.classList.add("play");
+  });
+}
+function playContact() {
+  ["ctl", "cbr"].forEach(id => {
+    const svg = document.getElementById(id);
+    svg.classList.remove("play");
+    build(id);
+    void svg.getBoundingClientRect();
+    svg.classList.add("play");
+  });
+}
+function setVH(){ document.documentElement.style.setProperty("--vh", (window.innerHeight / 100) + "px"); }
+setVH(); addEventListener("resize", setVH); addEventListener("orientationchange", setVH);
+document.getElementById("intro").addEventListener("click", play);
+setTimeout(play, 300);
+
+// the bloom takes about 8 seconds; wait 3 more seconds, then the lotus fades into the home page
+const INTRO_TIME = 11000;   // change this number (milliseconds) to leave the lotus earlier or later
+setTimeout(() => {
+  const intro = document.getElementById("intro");
+  intro.classList.add("hide");                        // lotus fades out
+  document.body.classList.remove("intro-on");
+  document.getElementById("home").classList.add("show");   // home fades in
+  setTimeout(() => { intro.style.display = "none"; }, 1300);
+}, INTRO_TIME);
+</script>
+
+<!-- ================= HOME + DETAIL PAGES SCRIPT ================= -->
+<script>
+  // if a picture is not found in the images folder, try the same name next to index.html
+  addEventListener('error',function(e){var t=e.target;
+    if(t&&t.tagName==='IMG'&&!t.dataset.retry&&/\/images\//.test(t.src)){t.dataset.retry=1;t.src=t.src.replace('/images/','/');}},true);
+
+  const pages = {
+    head:     {t:'Head of ISKCON', b:`
+      <div class="orn">&#10043;</div>
+      <div class="role-card">
+        <div class="role">Temple Head</div>
+        <div class="nm">Bhadra Harini Devi Dasi</div>
+      </div>
+      <div class="role-card">
+        <div class="role">Temple G M</div>
+        <div class="nm">Vrajesa Das</div>
+      </div>
+      <div class="role-card">
+        <div class="role">Temple Manager</div>
+        <div class="nm">Radhanath Das</div>
+      </div>
+      <div class="orn">&#10043;</div>`},
+    history:  {t:'History of ISKCON Puducherry', b:`
+      <div class="orn">&#10043;</div>
+      <div class="hist-text">
+        <p>We got land donation from Dr Vijayaraghuvullu @ Vrajesa Das Prabhuji in the year 2015, and we did Bhumi Puja in 2016.</p>
+        <p>We put up a small shed and installed the deities on the new land.</p>
+        <p>In 2019 we constructed the present temple in concrete, and now devotees regularly come for Darshan and do Puja.</p>
+      </div>
+      <div class="orn">&#10043;</div>`},
+    darshan:  {t:'Darshan Timing', b:`
+      <div class="orn">&#10043;</div>
+      <div class="dar-lead">Daily Darshan</div>
+      <div class="dar-row dar-open"><small>Morning &ndash; Open</small><b>5:30 AM to 1:00 PM</b></div>
+      <div class="dar-row dar-closed"><small>Darshan Closed</small><b>1:00 PM to 4:30 PM</b></div>
+      <div class="dar-row dar-open"><small>Evening &ndash; Open</small><b>4:30 PM to 8:00 PM</b></div>
+      <div class="orn">&#10043;</div>`},
+    programme:{t:'Programme', b:`
+      <div class="orn">&#10043;</div>
+      <div id="progList"></div>
+      <div class="orn">&#10043;</div>`},
+    location: {t:'Location & Address', b:`
+      <div class="feather-card">
+        <div class="inner">
+          <div class="loc-name">ISKCON PONDICHERRY</div>
+          <div class="loc-addr">No: 80/81,<br>Hare Krishna Land,<br>Srinivasa Avenue, Ousteri,<br>Vazhadhavur Road,<br>Koodapakkam,<br>Pondicherry &ndash; 605 502</div>
+          <div class="loc-mark"><span>Landmark</span>Near Laksmi Narayan Medical College</div>
+        </div>
+      </div>
+      <!-- MAP: to use your own location, replace the src="..." below with the link from Google Maps > Share > Embed a map -->
+      <div class="map-wrap">
+        <iframe title="ISKCON Pondicherry location" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=ISKCON%20PUDUCHERRY%20Hare%20Krishna%20Land%20Plot%20No%2080%20%2681%20Vazhudhavur%20Road&output=embed"></iframe>
+      </div>
+      <!-- MAP BUTTON: replace the href="..." with your own Google Maps share link if you have one -->
+      <a class="map-btn" target="_blank" rel="noopener"
+         href="https://www.google.com/maps/search/?api=1&query=ISKCON%20PUDUCHERRY%20Hare%20Krishna%20Land%20Plot%20No%2080%20%2681%20Vazhudhavur%20Road">&#10048;&nbsp; Open in Google Maps</a>`},
+    contact:  {t:'Contact Number', b:`
+      <div class="orn">&#10043;</div>
+      <a class="phone-card" href="tel:+919940864086"><small>Contact 1</small><b>+91 99408 64086</b></a>
+      <a class="phone-card" href="tel:+919658736363"><small>Contact 2</small><b>+91 96587 36363</b></a>
+      <a class="phone-card" href="tel:+919659821889"><small>Contact 3</small><b>+91 96598 21889</b></a>
+      <div class="orn">&#10043;</div>`},
+    books:    {t:'Available Books', b:`
+      <div id="bookList" class="mb-4">
+        <p class="books-by">Books by Srila Prabhupada</p>
+        <ol class="book-list">
+          <li>Srimad Bhagavatam (Complete Set)</li>
+          <li>Bhagavad Gita As It Is</li>
+          <li>Sri Isopanisad</li>
+          <li>The Nectar of Devotion</li>
+          <li>The Nectar of Instruction</li>
+          <li>Teachings of Lord Caitanya</li>
+          <li>Krsna, the Supreme Personality of Godhead</li>
+        </ol>
+        <div class="book-note">All Prabhupada books are available</div>
+      </div>
+      <div id="bkSlider" class="carousel slide rounded overflow-hidden">
+        <div class="carousel-inner">
+          <div class="carousel-item active"><img src="images/book-1.jpg" class="d-block slide-img" alt="Book distribution"></div>
+          <div class="carousel-item"><img src="images/book-2.jpg" class="d-block slide-img" alt="Book distribution"></div>
+          <div class="carousel-item"><img src="images/book-3.jpg" class="d-block slide-img" alt="Book distribution"></div>
+          <div class="carousel-item"><img src="images/book-4.jpg" class="d-block slide-img" alt="Book distribution"></div>
+          <div class="carousel-item"><img src="images/book-5.jpg" class="d-block slide-img" alt="Book distribution"></div>
+        </div>
+      </div>`}
+  };
+
+  // blurred background behind each slide picture (fills the side spaces)
+  function applyBlur(root) {
+    root.querySelectorAll('.carousel-item img').forEach(img => {
+      img.parentElement.style.setProperty('--bg', 'url("' + img.src + '")');
+    });
+  }
+  applyBlur(document);
+
+  // Festivals for every year: no dates, no year tabs
+  const FESTIVALS = [
+    ["Ekadashi", "Observed twice every month with fasting and kirtan"],
+    ["Vasanta Panchami", "Beginning of spring, Sri Sri Radha Krishna worship"],
+    ["Nityananda Trayodashi", "Appearance of Lord Nityananda Prabhu"],
+    ["Gaura Purnima", "Appearance of Sri Caitanya Mahaprabhu"],
+    ["Sri Rama Navami", "Appearance of Lord Ramachandra"],
+    ["Akshaya Tritiya &amp; Chandana Yatra", "Sandalwood paste offering to the Lord"],
+    ["Narasimha Chaturdashi", "Appearance of Lord Narasimhadeva"],
+    ["Snana Yatra", "Bathing festival of Lord Jagannatha"],
+    ["Ratha Yatra", "Chariot festival of Lord Jagannatha"],
+    ["Guru Purnima", "Vyasa Puja, honouring the spiritual master"],
+    ["Jhulan Yatra", "Swing festival of Sri Sri Radha Krishna"],
+    ["Balarama Jayanti", "Appearance of Lord Balarama"],
+    ["Sri Krishna Janmashtami", "Appearance of Lord Sri Krishna"],
+    ["Srila Prabhupada Vyasa Puja", "Appearance day of Srila Prabhupada"],
+    ["Radhashtami", "Appearance of Srimati Radharani"],
+    ["Vamana Dvadashi", "Appearance of Lord Vamanadeva"],
+    ["Vijayadashami", "Sri Rama Vijayotsava"],
+    ["Damodara (Kartika) Month", "The whole month: Deepa daan and Damodara Lila hearing"],
+    ["Govardhana Puja", "Worship of Govardhana Hill"],
+    ["Srila Prabhupada Disappearance Day", "Remembering Srila Prabhupada"],
+    ["Gopashtami", "Lord Krishna becomes a cowherd boy"],
+    ["Kartika Purnima", "Last day of Damodara month"],
+    ["Gita Jayanti", "The day the Bhagavad Gita was spoken"]
+  ];
+
+  // Programme page picture names: images/first.jpg, second.jpg, third.jpg, fourth.jpg
+  // (change .jpg to .png here if your pictures are PNG files)
+  const PROG_PICS = ['first', 'second', 'third', 'fourth'];
+
+  function renderProg() {
+    // 4 pictures spread evenly through the festival list
+    const n = FESTIVALS.length, picAt = {};
+    for (let k = 1; k <= 4; k++) picAt[Math.floor(n * k / 5)] = k;
+    let h = '';
+    FESTIVALS.forEach((f, i) => {
+      h += '<div class="fest"><b>' + f[0] + '</b><span>' + f[1] + '</span></div>';
+      const k = picAt[i + 1];
+      if (k) h += '<div class="prog-pic"><img src="images/' + PROG_PICS[k - 1] + '.jpg" alt="Programme picture ' + k + '"></div>';
+    });
+    h += '<div class="prog-members">Up to now, in our temple, more than <b>400</b> Life Patron Members and well-wishers are there.</div>';
+    document.getElementById('progList').innerHTML = h;
+  }
+  function initProg() { renderProg(); }
+
+  // Available Books picture slider: changes by itself every 2 seconds
+  const BOOK_SLIDE_TIME = 2000;   // milliseconds - change this number to make it faster or slower
+  let bookTimer = null;
+  function startBookSlider() {
+    clearInterval(bookTimer);
+    const items = [...document.querySelectorAll('#bkSlider .carousel-item')];
+    if (items.length < 2) return;
+    let i = Math.max(0, items.findIndex(e => e.classList.contains('active')));
+    bookTimer = setInterval(() => {
+      items[i].classList.remove('active');
+      i = (i + 1) % items.length;
+      items[i].classList.add('active');
+    }, BOOK_SLIDE_TIME);
+  }
+
+  const detail = document.getElementById('detail');
+  function openPage(key) {
+    const d = pages[key];
+    const body = document.getElementById('dBody');
+    document.getElementById('dTitle').textContent = d.t;
+    body.innerHTML = d.b;
+    applyBlur(body);
+    detail.classList.toggle('head-page', key === 'head');   // floral background only for Head of ISKCON
+    detail.classList.toggle('prog-page', key === 'programme');   // pink theme
+    detail.classList.toggle('darshan-page', key === 'darshan');   // yellow floral background
+    detail.classList.toggle('contact-page', key === 'contact');   // green page with blooming lotus
+    detail.classList.toggle('loc-page', key === 'location');   // floral background for Location & Address
+    detail.classList.toggle('history-page', key === 'history');   // purple + gold background for History
+    detail.classList.add('show');
+    detail.scrollTop = 0;
+    document.body.classList.add('detail-on');
+    detail.setAttribute('aria-hidden', 'false');
+    if (key === 'books') startBookSlider();
+    if (key === 'programme') initProg();   // festival list + pictures
+    if (key === 'contact') playContact();   // lotus blooms every time this page opens
+  }
+
+  // Back to Home: a peacock feather flies from right to left, then the home page shows
+  const FLY_TIME = 1800;   // milliseconds, same as the featherAcross animation
+  let leaving = false;
+  function closePage() {
+    if (leaving) return;
+    leaving = true;
+    const f = document.querySelector('#bye .feather').cloneNode(true);
+    f.classList.add('fly-feather');
+    document.body.appendChild(f);
+    setTimeout(() => {
+      clearInterval(bookTimer);
+      detail.classList.remove('show');
+      document.body.classList.remove('detail-on');
+      detail.setAttribute('aria-hidden', 'true');
+      f.remove();
+      leaving = false;
+    }, FLY_TIME);
+  }
+  document.querySelectorAll('[data-info]').forEach(btn =>
+    btn.addEventListener('click', () => openPage(btn.dataset.info)));
+  document.getElementById('backBtn').addEventListener('click', closePage);
+  document.getElementById('sideHome').addEventListener('click', closePage);
+
+  // ---------- exit ----------
+  document.getElementById('exitBtn').addEventListener('click', () => {
+    document.getElementById('bye').classList.add('show');
+  });
+
+  // ---------- draw the peacock feather ----------
+  (function drawFeather(){
+    const SVGNS = 'http://www.w3.org/2000/svg', cx = 100, yBot = 222, yTop = 14;
+    const Y = t => yBot - t * (yBot - yTop);
+    const W = t => 84 * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.85)), 0.8);
+    const mk = (tag, attrs, parent) => {
+      const e = document.createElementNS(SVGNS, tag);
+      for (const k in attrs) e.setAttribute(k, attrs[k]);
+      parent.appendChild(e); return e;
+    };
+    let left = '', right = '';
+    for (let t = 0; t <= 1.001; t += 0.02) {
+      left  += (t === 0 ? 'M' : 'L') + (cx - W(t)) + ' ' + Y(t) + ' ';
+      right = 'L' + (cx + W(t)) + ' ' + Y(t) + ' ' + right;
+    }
+    document.getElementById('featherBody').setAttribute('d', left + right + 'Z');
+
+    const g = document.getElementById('barbs');
+    for (let t = 0.01; t < 0.98; t += 0.0045) {
+      const y = Y(t);
+      [-1, 1].forEach(s => {
+        const t2 = Math.min(1, t + 0.1 + Math.random() * 0.12);
+        const ex = cx + s * W(t2) * (0.9 + Math.random() * 0.1);
+        const ey = Y(t2) + (Math.random() * 4 - 2);
+        const hue = 150 - 85 * t + Math.random() * 12;
+        const light = 28 + Math.random() * 20;
+        mk('path', {
+          d: `M${cx} ${y} Q ${cx + (ex - cx) * 0.45} ${y - (y - ey) * 0.1} ${ex} ${ey}`,
+          stroke: `hsl(${hue} 72% ${light}%)`, 'stroke-width': 0.8, opacity: 0.9
+        }, g);
+      });
+    }
+
+    const rh = document.getElementById('ringHair');
+    for (let a = 0; a < 360; a += 4) {
+      const r = a * Math.PI / 180, c = Math.cos(r), s = Math.sin(r);
+      mk('line', { x1: cx + 27 * c, y1: 106 + 34 * s, x2: cx + 39 * c, y2: 106 + 51 * s }, rh);
+    }
+  })();
+</script>
+</body>
+</html>
